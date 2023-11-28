@@ -8,34 +8,29 @@ from .base_model import BaseModel
 
 class Trainer:
     def __init__(self, num_epochs: int, model: BaseModel, batch_size: int,
-            x_train: torch.Tensor, y_train: torch.Tensor, x_val: torch.Tensor, 
-            y_val: torch.Tensor, optim_initializer: torch.optim = Callable[[Iterator[torch.nn.Parameter]], torch.optim.Optimizer]) -> None:
+            optim_initializer: torch.optim = Callable[[Iterator[torch.nn.Parameter]], torch.optim.Optimizer]) -> None:
         
         self.model = model
         self.batch_size: int = batch_size
         self.num_epochs: int = num_epochs
 
-        self.x_train: torch.Tensor = x_train
-        self.y_train: torch.Tensor = y_train
-        self.x_val: torch.Tensor = x_val
-        self.y_val: torch.Tensor = y_val
         self.optimizer: torch.optim.Optimizer = optim_initializer(self.model.parameters())
 
         self.best_model_param: Iterator[torch.nn.Parameter] = None
         self.best_val_acc = -torch.inf
     
-    def _train_for_one_epoch(self):
-        num_samples = self.x_train.shape[0]
-        sample_indices = torch.randperm(num_samples, device=self.x_train.device)
+    def _train_for_one_epoch(self, x_train: torch.Tensor, y_train: torch.Tensor) -> None:
+        num_samples = x_train.shape[0]
+        sample_indices = torch.randperm(num_samples, device=x_train.device)
         list_batch_indices = sample_indices.split(self.batch_size)
 
         for iter, l in enumerate(list_batch_indices):
             self.optimizer.zero_grad()
-            x_train, y_train = self.x_train[l], self.y_train[l]
+            xb_train, yb_train = x_train[l], y_train[l]
 
-            out = self.model(x_train)
-            loss = self.model.loss_calc(out, y_train)
-            acc = self.model.get_acc(out, y_train)
+            out = self.model(xb_train)
+            loss = self.model.loss_calc(out, yb_train)
+            acc = self.model.get_acc(out, yb_train)
 
             loss.backward()
             self.optimizer.step()
@@ -44,19 +39,19 @@ class Trainer:
                 print(f"\tEpoch {self.e} Iteration {iter} -->Train Loss: {loss:.4f}, Train ACC: {acc:.2%}", flush=True)
     
     
-    def _eval_for_one_epoch(self):
-        num_samples = self.x_val.shape[0]
-        sample_indices = torch.randperm(num_samples, device=self.x_val.device)
+    def _eval_for_one_epoch(self, x_val: torch.Tensor, y_val: torch.Tensor) -> None:
+        num_samples = x_val.shape[0]
+        sample_indices = torch.randperm(num_samples, device=x_val.device)
         list_batch_indices = sample_indices.split(self.batch_size)
         
         losses = []
         accs = []
         for l in list_batch_indices:
-            x_val, y_val = self.x_val[l], self.y_val[l]
+            xb_val, yb_val = x_val[l], y_val[l]
             
-            out = self.model(x_val)
-            loss = self.model.loss_calc(out, y_val)
-            acc = self.model.get_acc(out, y_val)
+            out = self.model(xb_val)
+            loss = self.model.loss_calc(out, yb_val)
+            acc = self.model.get_acc(out, yb_val)
 
             losses.append(loss.item())
             accs.append(acc.item())
@@ -70,16 +65,18 @@ class Trainer:
             self.best_val_acc = maccs
             self.best_model_param = self.model.parameters()
 
-    def train(self):
+    def train(self,  x_train: torch.Tensor, y_train: torch.Tensor, 
+        x_val: torch.Tensor, y_val: torch.Tensor) -> None:
+        """Train the model on given data and evaluate it periodically."""
         self.model.train()
 
         for self.e in range(self.num_epochs):
             self.model.train()
-            self._train_for_one_epoch()
+            self._train_for_one_epoch(x_train, y_train)
             
             self.model.eval()
             with torch.no_grad():
-                self._eval_for_one_epoch()
+                self._eval_for_one_epoch(x_val, y_val)
 
 
     def evaluate(self, x_test: torch.Tensor) -> torch.Tensor:
