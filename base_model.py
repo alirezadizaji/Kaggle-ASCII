@@ -12,6 +12,6 @@ class BaseModel(nn.Module, ABC):
     def loss_calc(self, out: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         pass
 
-    def get_acc(self, out: torch.Tensor, y: torch.Tensor) -> float:
+    def get_acc(self, out: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         pred = out.argmax(1)
         return (pred == y).float().mean()

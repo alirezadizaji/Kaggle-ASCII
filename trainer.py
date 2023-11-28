@@ -20,36 +20,71 @@ class Trainer:
         self.x_val: torch.Tensor = x_val
         self.y_val: torch.Tensor = y_val
         self.optimizer: torch.optim.Optimizer = optim_initializer(self.model.parameters())
+
+        self.best_model_param: Iterator[torch.nn.Parameter] = None
+        self.best_val_acc = -torch.inf
+    
+    def _train_for_one_epoch(self):
+        num_samples = self.x_train.shape[0]
+        sample_indices = torch.randperm(num_samples, device=self.x_train.device)
+        list_batch_indices = sample_indices.split(self.batch_size)
+
+        for iter, l in enumerate(list_batch_indices):
+            self.optimizer.zero_grad()
+            x_train, y_train = self.x_train[l], self.y_train[l]
+
+            out = self.model(x_train)
+            loss = self.model.loss_calc(out, y_train)
+            acc = self.model.get_acc(out, y_train)
+
+            loss.backward()
+            self.optimizer.step()
+            
+            if iter % 10 == 0 or iter == len(list_batch_indices) - 1:
+                print(f"\tEpoch {self.e} Iteration {iter} -->Train Loss: {loss:.4f}, Train ACC: {acc:.2%}", flush=True)
     
     
+    def _eval_for_one_epoch(self):
+        num_samples = self.x_val.shape[0]
+        sample_indices = torch.randperm(num_samples, device=self.x_val.device)
+        list_batch_indices = sample_indices.split(self.batch_size)
+        
+        losses = []
+        accs = []
+        for l in list_batch_indices:
+            x_val, y_val = self.x_val[l], self.y_val[l]
+            
+            out = self.model(x_val)
+            loss = self.model.loss_calc(out, y_val)
+            acc = self.model.get_acc(out, y_val)
+
+            losses.append(loss.item())
+            accs.append(acc.item())
+
+        mloss = torch.mean(losses).item()
+        maccs = torch.mean(accs).item()
+        
+        print(f"@@ Epoch {self.e} -->Val Loss: {mloss:.4f}, Val ACC: {maccs:.2%}", flush=True)
+
+        if maccs >= self.best_val_acc:
+            self.best_val_acc = maccs
+            self.best_model_param = self.model.parameters()
 
     def train(self):
         self.model.train()
-        num_samples = self.x_train.shape[0]
-        sample_indices = torch.arange(num_samples, device=self.x_train.device)
 
-        list_batch_indices = sample_indices.split(self.batch_size)
-        for e in range(self.num_epochs):
-            for iter, l in enumerate(list_batch_indices):
-                self.optimizer.zero_grad()
-                x_train, y_train = self.x_train[l], self.y_train[l]
-                x_val, y_val = self.x_val[l], self.y_val[l]
+        for self.e in range(self.num_epochs):
+            self.model.train()
+            self._train_for_one_epoch()
+            
+            self.model.eval()
+            with torch.no_grad():
+                self._eval_for_one_epoch()
 
-                out = self.model(x_train)
-                loss = self.model.loss_calc(out, y_train)
-                acc = self.model.get_acc(out, y_val)
 
-                loss.backward()
-                self.optimizer.step()
-                
-                if iter % 10 == 0 or iter == len(list_batch_indices) - 1:
-                    self.model.eval()
-                    with torch.no_grad():
-                        val_out = self.model(x_val)
-                        val_loss = self.model.loss_calc(val_out, y_val)
-                        val_acc = self.model.get_acc(val_out, y_val)
-
-                        print(f"Epoch {e} -->Train Loss: {loss:.4f}, Train ACC: {acc:.2%} ;;; Val Loss: {val_loss:.4f}, Val ACC: {val_acc:.2%}", flush=True)
-                    
-
-                    self.model.train()
+    def evaluate(self, x_test: torch.Tensor) -> torch.Tensor:
+        self.model.eval()
+        with torch.no_grad():
+            out = self.model(x_test)
+        
+        return out.argmax(1)
