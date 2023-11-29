@@ -22,13 +22,17 @@ class Node:
             vals = np.sort(X[:, j])
             midpoint = (vals[:-1] + vals[1:]) / 2
 
-            for m in range(midpoint):
+            for m in midpoint:
                 left_mask = X[:, j] > m
                 right_mask = ~left_mask
 
                 y_left = y[left_mask]
                 y_right = y[right_mask]
                 
+                # Do not consider midpoints which cannot generate left-right children
+                if y_left.size == 0 or y_right.size == 0:
+                    continue
+
                 p_left = y_left.size / y.size
                 p_right = y_right.size / y.size
 

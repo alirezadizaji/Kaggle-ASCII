@@ -18,14 +18,14 @@ class RandomForestClassifier:
         self.estimators: List[Tuple[DecisionTree, np.ndarray]] = list()
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
-        num_bootstrapping: int = (self.p_bootstrapping * y.size)
-        num_featuring: int = (self.p_featuring * X.shape[0])
+        num_bootstrapping: int = int(self.p_bootstrapping * y.size)
+        num_featuring: int = int(self.p_featuring * X.shape[1])
 
         for _ in range(self.n_estimators):
             rows_inds = np.random.choice(y.size, size=num_bootstrapping, replace=True)
             cols_inds = np.random.choice(X.shape[1], size=num_featuring, replace=False)
 
-            sub_X = X[rows_inds, cols_inds]
+            sub_X = X[rows_inds][:, cols_inds]
             sub_y = y[rows_inds]
 
             dt = DecisionTree(self.max_depth)
