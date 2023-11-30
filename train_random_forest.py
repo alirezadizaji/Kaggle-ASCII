@@ -8,12 +8,12 @@ from random_forest.random_forest import RandomForestClassifier
 
 if __name__ == "__main__":
     #Import training and test sets
-    train=pd.read_csv(r"ascii-sign-language\sign_mnist_train.csv")
+    train=pd.read_csv("ascii-sign-language/sign_mnist_train.csv")
 
-    test = pd.read_csv(r"ascii-sign-language\test.csv")
+    test = pd.read_csv("ascii-sign-language/test.csv")
 
     #Create dictionary to map the predicted numbers (0-25) (and no cases for 9=J or 25=Z because of gesture motions).
-    map_letters=pd.read_excel(r"ascii-sign-language\Letters.xlsx")
+    map_letters=pd.read_excel("ascii-sign-language/Letters.xlsx")
     map_letters["label"] = np.where(map_letters["label"] >= 9, map_letters["label"] - 1, map_letters["label"])
     dictionary_letters = dict(map_letters.values)
     
@@ -22,12 +22,8 @@ if __name__ == "__main__":
                                                   stratify=train["label"], random_state=0)
 
     # Reshape the data to be suitable for CNN
-    x_train=np.array(x_train)
-    x_val=np.array(x_val)
-
-    x_train = x_train.reshape(x_train.shape[0], 28, 28, 1).astype('float32')
-    x_val = x_val.reshape(x_val.shape[0], 28, 28, 1).astype('float32')
-
+    x_train=np.array(x_train).astype(np.float32)
+    x_val=np.array(x_val).astype(np.float32)
 
     #LETS ADJUST THE NUMBER OF CLASSES SINCE 9 IS NOT INCLUDED
     y_train=np.array(y_train)
@@ -35,24 +31,21 @@ if __name__ == "__main__":
     y_val=np.array(y_val)
     y_val = np.where(y_val >= 9, y_val - 1, y_val)
 
-    #y_train=y_train.reshape(y_train.shape[0],1)
-    #y_val=y_val.reshape(y_val.shape[0],1)
-
     # Normalize pixel values to be between 0 and 1
-    x_train /= 255
-    x_val /= 255
+    x_train /= 255.0
+    x_val /= 255.0
 
-    hyperparameters = {
-        "n_estimators": 2, "p_bootstraping": 0.8, "p_featuring": 1.0,
-        "n_estimators": 3, "p_bootstraping": 0.8, "p_featuring": 1.0,
-        "n_estimators": 5, "p_bootstraping": 0.8, "p_featuring": 1.0,
-    }
+    hyperparameters = [
+       {"n_estimators": 2, "p_bootstraping": 0.8, "p_featuring": 1.0},
+       {"n_estimators": 3, "p_bootstraping": 0.8, "p_featuring": 1.0},
+       {"n_estimators": 5, "p_bootstraping": 0.8, "p_featuring": 1.0},
+    ]
 
     best_h: dict = None
     best_val_acc: float = -np.inf
 
     for h in hyperparameters:
-        rf = RandomForestClassifier(*h)
+        rf = RandomForestClassifier(**h)
         rf.fit(x_train, y_train)
         pred_val = rf.predict(x_val).argmax(1)
         val_acc = (pred_val == y_val).sum() / y_val.size
@@ -61,9 +54,9 @@ if __name__ == "__main__":
             best_h = h
             best_val_acc = val_acc
     
-    model = RandomForestClassifier(*best_h)
+    model = RandomForestClassifier(**best_h)
     X = np.vstack((x_train, x_val))
     y = np.vstack((x_val, y_val))
     model.fit(X, y)
-    final_pred=make_predictions_test(test,model,dictionary_letters)
+    final_pred=make_predictions_test(test,model,dictionary_letters, to_img_form=False)
     final_pred.to_csv("rfc_first_trial.csv",index=False)

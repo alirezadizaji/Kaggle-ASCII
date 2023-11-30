@@ -8,7 +8,7 @@ from .utils import vote
 class RandomForestClassifier:
     def __init__(self, n_estimators: int = 10, max_depth: int = 5, p_bootstraping: float = 0.5,
                 p_featuring: float = 0.5, num_cls: int = 2) -> None:
-        
+
         self.max_depth: int = max_depth
         self.n_estimators: int = n_estimators
 
@@ -22,7 +22,8 @@ class RandomForestClassifier:
         num_bootstrapping: int = int(self.p_bootstrapping * y.size)
         num_featuring: int = int(self.p_featuring * X.shape[1])
 
-        for _ in range(self.n_estimators):
+        for i in range(self.n_estimators):
+            print(f"@@ {i + 1}th decision tree training: first estimator @@")
             rows_inds = np.random.choice(y.size, size=num_bootstrapping, replace=True)
             cols_inds = np.random.choice(X.shape[1], size=num_featuring, replace=False)
 

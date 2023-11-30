@@ -28,6 +28,7 @@ class DecisionTree:
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         self.root = self._create(X, y, depth=0)
+        print("\t@ Decision tree creation done @", flush=True)
     
     def predict(self, X_test: np.ndarray) -> np.ndarray:
         N = X_test.shape[0]
@@ -45,7 +46,8 @@ class DecisionTree:
                     current_node = current_node.right
             
             pred_test[i] = current_node.node_class
-
+            if i % 500 == 0:
+                print(f"\t@ {i}th prediction was done @", flush=True)
         assert  np.all(pred_test != -np.inf)
 
         return pred_test

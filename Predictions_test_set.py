@@ -1,13 +1,17 @@
 import pandas as pd
 import numpy as np
 
-def make_predictions_test(df, apply_model, dictionary_letters):
+def make_predictions_test(df, apply_model, dictionary_letters, to_img_form: bool = True):
     
     first = np.array(df.iloc[:,1:784+1])
     second = np.array(df.iloc[:,784+1:])
     
-    first = first.reshape(first.shape[0], 28, 28, 1).astype('float32')
-    second = second.reshape(second.shape[0], 28, 28, 1).astype('float32')
+    if to_img_form:
+        first = first.reshape(first.shape[0], 28, 28, 1)
+        second = second.reshape(second.shape[0], 28, 28, 1)
+    
+    first = first.astype(np.float32)
+    second = second.astype(np.float32)
     
     first /= 255
     second /= 255
