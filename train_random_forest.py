@@ -39,11 +39,14 @@ def main():
     x_val /= 255.0
 
     hyperparameters = [
-       {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 5, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 15, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 3, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 5, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
+    #    {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 5, "p_featuring": 1.0, 'num_cls': num_cls},
+    #    {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
+    #    {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 15, "p_featuring": 1.0, 'num_cls': num_cls},
+    #    {"n_estimators": 3, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
+       {"n_estimators": 5, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
+       {"n_estimators": 10, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
+       {"n_estimators": 15, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
+    #    {"n_estimators": 5, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
     ]
 
     best_h: dict = None
