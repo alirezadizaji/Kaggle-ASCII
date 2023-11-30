@@ -16,7 +16,6 @@ class DecisionTree:
         if is_single_class or depth == self.max_depth:
             node.leaf = True
             node.node_class = majority_y
-            return
         else:
             node.split(X, y)
             left_mask = node.ask(X)

@@ -27,7 +27,7 @@ class RandomForestClassifier:
 
             sub_X = X[rows_inds][:, cols_inds]
             sub_y = y[rows_inds]
-
+            
             dt = DecisionTree(self.max_depth)
             dt.fit(sub_X, sub_y)
 
@@ -35,6 +35,6 @@ class RandomForestClassifier:
     
     def predict(self, X: np.ndarray) -> np.ndarray:
         predictions = np.array([dt.predict(X[:, cols_inds]) for dt, cols_inds in self.estimators]) # N_EST x N_SAMPLES
-        pred = np.array(vote(y) for y in predictions.T)
-        
+        pred = np.array([vote(y) for y in predictions.T])
+
         return pred.astype(np.uint8)
