@@ -59,6 +59,7 @@ def main():
         val_acc = (pred_val == y_val).sum() / y_val.size
         print(f"@@ Random Forest Classifer: val acc {val_acc}, params {h}", flush=True)
         if val_acc > best_val_acc:
+            print(f"@@@ BEST VAL ACCURACY HAS JUST CHANGED @@@", flush=True)
             best_h = h
             best_val_acc = val_acc
     
