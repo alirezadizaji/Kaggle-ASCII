@@ -1,3 +1,6 @@
+import os
+import sys
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -9,12 +12,11 @@ from random_forest.random_forest import RandomForestClassifier
 @stdout_stderr_setter("./Consoles_random_forest")
 def main():
      #Import training and test sets
-    train=pd.read_csv("ascii-sign-language/sign_mnist_train.csv")
-
-    test = pd.read_csv("ascii-sign-language/test.csv")
+    train=pd.read_csv(os.path.join(sys.argv[1], "sign_mnist_train.csv"))
+    test = pd.read_csv(os.path.join(sys.argv[1], "test.csv"))
 
     #Create dictionary to map the predicted numbers (0-25) (and no cases for 9=J or 25=Z because of gesture motions).
-    map_letters=pd.read_excel("ascii-sign-language/Letters.xlsx")
+    map_letters=pd.read_excel(os.path.join(sys.argv[1], "Letters.xlsx"))
     map_letters["label"] = np.where(map_letters["label"] >= 9, map_letters["label"] - 1, map_letters["label"])
     dictionary_letters = dict(map_letters.values)
     
