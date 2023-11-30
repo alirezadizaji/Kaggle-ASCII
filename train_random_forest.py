@@ -3,11 +3,12 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from Predictions_test_set import make_predictions_test
 
+from stdout_stderr_setter import stdout_stderr_setter
 from random_forest.random_forest import RandomForestClassifier
 
-
-if __name__ == "__main__":
-    #Import training and test sets
+@stdout_stderr_setter("./Consoles_random_forest")
+def main():
+     #Import training and test sets
     train=pd.read_csv("ascii-sign-language/sign_mnist_train.csv")
 
     test = pd.read_csv("ascii-sign-language/test.csv")
@@ -36,9 +37,11 @@ if __name__ == "__main__":
     x_val /= 255.0
 
     hyperparameters = [
-       {"n_estimators": 2, "p_bootstraping": 0.8, "p_featuring": 1.0},
-       {"n_estimators": 3, "p_bootstraping": 0.8, "p_featuring": 1.0},
-       {"n_estimators": 5, "p_bootstraping": 0.8, "p_featuring": 1.0},
+       {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 5, "p_featuring": 1.0, 'num_cls': num_cls},
+       {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
+       {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 15, "p_featuring": 1.0, 'num_cls': num_cls},
+       {"n_estimators": 3, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
+       {"n_estimators": 5, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
     ]
 
     best_h: dict = None
@@ -56,7 +59,11 @@ if __name__ == "__main__":
     
     model = RandomForestClassifier(**best_h)
     X = np.vstack((x_train, x_val))
-    y = np.vstack((x_val, y_val))
+    y = np.concatenate((y_train, y_val))
     model.fit(X, y)
     final_pred=make_predictions_test(test,model,dictionary_letters, to_img_form=False)
     final_pred.to_csv("rfc_first_trial.csv",index=False)
+
+
+if __name__ == "__main__":
+   main()

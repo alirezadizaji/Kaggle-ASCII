@@ -14,15 +14,18 @@ class Node:
     
 
     def split(self, X: np.ndarray, y: np.ndarray) -> None:
+        min_num_split: int = 2
         _, F = X.shape
-        
+
         best_loss = np.inf
 
         for j in range(F):
             vals = np.sort(X[:, j])
             midpoint = (vals[:-1] + vals[1:]) / 2
+            mv = np.unique(midpoint)
+            inds = np.arange(min_num_split) * (mv.size // min_num_split)
 
-            for m in midpoint:
+            for m in mv[inds]:
                 left_mask = X[:, j] > m
                 right_mask = ~left_mask
 
