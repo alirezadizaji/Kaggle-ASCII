@@ -7,7 +7,7 @@ from .utils import vote
 
 class RandomForestClassifier:
     def __init__(self, n_estimators: int = 10, max_depth: int = 5, p_bootstraping: float = 0.5,
-                p_featuring: float = 0.5) -> None:
+                p_featuring: float = 0.5, num_cls: int = 2) -> None:
         
         self.max_depth: int = max_depth
         self.n_estimators: int = n_estimators
@@ -16,6 +16,7 @@ class RandomForestClassifier:
         self.p_bootstrapping: float = p_bootstraping
 
         self.estimators: List[Tuple[DecisionTree, np.ndarray]] = list()
+        self.num_cls: int = num_cls
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         num_bootstrapping: int = int(self.p_bootstrapping * y.size)
@@ -37,4 +38,6 @@ class RandomForestClassifier:
         predictions = np.array([dt.predict(X[:, cols_inds]) for dt, cols_inds in self.estimators]) # N_EST x N_SAMPLES
         pred = np.array([vote(y) for y in predictions.T])
 
-        return pred.astype(np.uint8)
+        pred = pred.astype(np.uint8)
+        one_hot_pred = np.eye(self.num_cls)[pred]
+        return one_hot_pred
