@@ -11,7 +11,7 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 
 
-@stdout_stderr_setter("./consoles_adaboost")
+@stdout_stderr_setter("./Consoles_adaboost")
 def main():
      #Import training and test sets
     train=pd.read_csv(os.path.join(sys.argv[1], "sign_mnist_train.csv"))
@@ -41,11 +41,9 @@ def main():
     x_val /= 255.0
 
     hyperparameters = [
-        {"estimator": DecisionTreeClassifier(max_depth=10), "n_estimators": 50, "learning_rate": 1.0},
-        {"estimator": DecisionTreeClassifier(max_depth=12), "n_estimators": 50, "learning_rate": 1.0},
-        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 50, "learning_rate": 1.0},
-        {"estimator": DecisionTreeClassifier(max_depth=20), "n_estimators": 50, "learning_rate": 1.0},
-        {"estimator": DecisionTreeClassifier(max_depth=25), "n_estimators": 50, "learning_rate": 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=10), "n_estimators": 5, "learning_rate": 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=12), "n_estimators": 5, "learning_rate": 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 5, "learning_rate": 1.0},
     ]
 
     best_h: dict = None
