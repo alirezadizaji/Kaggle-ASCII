@@ -2,9 +2,7 @@ import os
 import sys
 
 import numpy as np
-from numpy import ndarray
 import pandas as pd
-from sklearn._typing import ArrayLike, MatrixLike
 from sklearn.model_selection import train_test_split
 from Predictions_test_set import make_predictions_test
 
