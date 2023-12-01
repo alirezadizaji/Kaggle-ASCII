@@ -14,7 +14,7 @@ class Node:
     
 
     def split(self, X: np.ndarray, y: np.ndarray) -> None:
-        min_num_split: int = 20
+        min_num_split: int = 8
         _, F = X.shape
 
         best_loss = np.inf
