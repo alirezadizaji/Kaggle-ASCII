@@ -11,7 +11,7 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 
 
-@stdout_stderr_setter("./Consoles_adaboost")
+@stdout_stderr_setter("./consoles_adaboost")
 def main():
      #Import training and test sets
     train=pd.read_csv(os.path.join(sys.argv[1], "sign_mnist_train.csv"))
@@ -22,7 +22,6 @@ def main():
     map_letters["label"] = np.where(map_letters["label"] >= 9, map_letters["label"] - 1, map_letters["label"])
     dictionary_letters = dict(map_letters.values)
     
-    num_cls = train["label"].unique().size
     x_train, x_val,y_train, y_val = train_test_split(train.iloc[:,1:] , train["label"],
                                                   stratify=train["label"], random_state=0)
 
@@ -41,10 +40,13 @@ def main():
     x_val /= 255.0
 
     hyperparameters = [
-        {"estimator": DecisionTreeClassifier(max_depth=10), "n_estimators": 5, "learning_rate": 1.0},
-        {"estimator": DecisionTreeClassifier(max_depth=12), "n_estimators": 5, "learning_rate": 1.0},
-        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 5, "learning_rate": 1.0},
-    ]
+        # {"estimator": DecisionTreeClassifier(max_depth=10), "n_estimators": 5, "learning_rate": 1.0},
+        # {"estimator": DecisionTreeClassifier(max_depth=12), "n_estimators": 5, "learning_rate": 1.0},
+        # {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 5, "learning_rate": 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 15, "learning_rate": 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 15, "learning_rate": 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 15, "learning_rate": 1.0},
+      ]
 
     best_h: dict = None
     best_val_acc: float = -np.inf
