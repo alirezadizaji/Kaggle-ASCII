@@ -2,14 +2,18 @@ import os
 import sys
 
 import numpy as np
+from numpy import ndarray
 import pandas as pd
+from sklearn._typing import ArrayLike, MatrixLike
 from sklearn.model_selection import train_test_split
 from Predictions_test_set import make_predictions_test
 
 from stdout_stderr_setter import stdout_stderr_setter
-from random_forest.random_forest import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 
-@stdout_stderr_setter("./Consoles_random_forest")
+
+@stdout_stderr_setter("./consoles_adaboost")
 def main():
      #Import training and test sets
     train=pd.read_csv(os.path.join(sys.argv[1], "sign_mnist_train.csv"))
@@ -39,37 +43,33 @@ def main():
     x_val /= 255.0
 
     hyperparameters = [
-    #    {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 5, "p_featuring": 1.0, 'num_cls': num_cls},
-    #    {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
-    #    {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 15, "p_featuring": 1.0, 'num_cls': num_cls},
-    #    {"n_estimators": 3, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 5, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 10, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 15, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 15, "p_bootstraping": 0.8, "max_depth": 25, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 50, "p_bootstraping": 0.4, "max_depth": 10, "p_featuring": 0.3, 'num_cls': num_cls}
+        {"estimator": DecisionTreeClassifier(max_depth=10), "n_estimators": 50, "learning_rate": 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=12), "n_estimators": 50, "learning_rate": 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 50, "learning_rate": 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=20), "n_estimators": 50, "learning_rate": 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=25), "n_estimators": 50, "learning_rate": 1.0},
     ]
 
     best_h: dict = None
     best_val_acc: float = -np.inf
 
     for h in hyperparameters:
-        rf = RandomForestClassifier(**h)
-        rf.fit(x_train, y_train)
-        pred_val = rf.predict(x_val).argmax(1)
+        ab = AdaBoostClassifier(**h)
+        ab.fit(x_train, y_train)
+        pred_val = ab.predict(x_val)
         val_acc = (pred_val == y_val).sum() / y_val.size
-        print(f"@@ Random Forest Classifer: val acc {val_acc}, params {h}", flush=True)
+        print(f"@@ Adaboost Classifer: val acc {val_acc}, params {h}", flush=True)
         if val_acc > best_val_acc:
-            print(f"@@@ BEST VAL ACCURACY HAS JUST CHANGED @@@", flush=True)
+            print(f"@@@ best validation accuracy has just changed @@@", flush=True)
             best_h = h
             best_val_acc = val_acc
     
-    model = RandomForestClassifier(**best_h)
+    model = AdaBoostClassifier(**best_h)
     X = np.vstack((x_train, x_val))
     y = np.concatenate((y_train, y_val))
     model.fit(X, y)
     final_pred=make_predictions_test(test,model,dictionary_letters, to_img_form=False)
-    final_pred.to_csv("rfc_first_trial.csv",index=False)
+    final_pred.to_csv("ab_first_trial.csv",index=False)
 
 
 if __name__ == "__main__":
