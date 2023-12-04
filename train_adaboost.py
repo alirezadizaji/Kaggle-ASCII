@@ -43,9 +43,9 @@ def main():
         # {"estimator": DecisionTreeClassifier(max_depth=10), "n_estimators": 5, "learning_rate": 1.0},
         # {"estimator": DecisionTreeClassifier(max_depth=12), "n_estimators": 5, "learning_rate": 1.0},
         # {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 5, "learning_rate": 1.0},
-        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 15, "learning_rate": 1.0},
-        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 15, "learning_rate": 1.0},
-        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 15, "learning_rate": 1.0},
+        {'estimator': DecisionTreeClassifier(max_depth=15), 'n_estimators': 15, 'learning_rate': 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 25, "learning_rate": 1.0},
+        {"estimator": DecisionTreeClassifier(max_depth=15), "n_estimators": 40, "learning_rate": 1.0},
       ]
 
     best_h: dict = None

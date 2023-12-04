@@ -43,11 +43,17 @@ def main():
     #    {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
     #    {"n_estimators": 2, "p_bootstraping": 0.8, "max_depth": 15, "p_featuring": 1.0, 'num_cls': num_cls},
     #    {"n_estimators": 3, "p_bootstraping": 0.8, "max_depth": 10, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 5, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 10, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 15, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 15, "p_bootstraping": 0.8, "max_depth": 25, "p_featuring": 1.0, 'num_cls': num_cls},
-       {"n_estimators": 50, "p_bootstraping": 0.4, "max_depth": 10, "p_featuring": 0.3, 'num_cls': num_cls}
+      # {"n_estimators": 5, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
+      # {"n_estimators": 10, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
+     #  {"n_estimators": 15, "p_bootstraping": 0.8, "max_depth": 20, "p_featuring": 1.0, 'num_cls': num_cls},
+      # {"n_estimators": 15, "p_bootstraping": 0.8, "max_depth": 25, "p_featuring": 1.0, 'num_cls': num_cls},
+
+       {"n_estimators": 50, "p_bootstraping": 0.3, "max_depth": 15, "p_featuring": 0.6, 'num_cls': num_cls},
+       {"n_estimators": 50, "p_bootstraping": 0.3, "max_depth": 15, "p_featuring": 0.6, 'num_cls': num_cls},
+       
+       {"n_estimators": 100, "p_bootstraping": 0.2, "max_depth": 12, "p_featuring": 0.3, 'num_cls': num_cls}
+
+       {"n_estimators": 400, "p_bootstraping": 0.2, "max_depth": 15, "p_featuring": 0.2, 'num_cls': num_cls}
     ]
 
     best_h: dict = None
