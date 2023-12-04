@@ -20,7 +20,9 @@ Please remain the ```sign_mnist_test.csv``` into ```test.csv``` file.
 
 ## How to run
 ### Convolutional Neural Network
-...
+
+To run all the experiments and configurations performed for the convolutional neural network, run the code in the "Convolutional neural network.ipynb" jupyter notebook. The code here depends on the main libraries of keras and tensor flow and uses the "make_predictions_test" function from the python code "Predictions_test_set.py".
+
 ### Random forest
 To run the random forest, use the following command
 ```
