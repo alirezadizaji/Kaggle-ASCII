@@ -51,7 +51,7 @@ def main():
        {"n_estimators": 50, "p_bootstraping": 0.3, "max_depth": 15, "p_featuring": 0.6, 'num_cls': num_cls},
        {"n_estimators": 50, "p_bootstraping": 0.3, "max_depth": 15, "p_featuring": 0.6, 'num_cls': num_cls},
        
-       {"n_estimators": 100, "p_bootstraping": 0.2, "max_depth": 12, "p_featuring": 0.3, 'num_cls': num_cls}
+       {"n_estimators": 100, "p_bootstraping": 0.2, "max_depth": 12, "p_featuring": 0.3, 'num_cls': num_cls},
 
        {"n_estimators": 400, "p_bootstraping": 0.2, "max_depth": 15, "p_featuring": 0.2, 'num_cls': num_cls}
     ]
