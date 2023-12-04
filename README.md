@@ -26,3 +26,9 @@ To run the random forest, use the following command
 ```
 python train_random_forest.py [data folder]
 ```
+
+### AdaBoost
+To run the AdaBoost, use the following command:
+```
+python train_adaboost.py [data folder]
+```
