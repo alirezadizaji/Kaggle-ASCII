@@ -16,7 +16,7 @@ ascii-sign-language/
     sign_mnist_train.csv
     test.csv
 ```
-Please remain the ```sign_mnist_test.csv``` into ```test.csv``` file.
+Please rename the ```sign_mnist_test.csv``` into ```test.csv``` file.
 
 ## How to run
 ### Convolutional Neural Network
