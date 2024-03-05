@@ -1,4 +1,4 @@
-# ift6390_DC2
+# Kaggle-ASCII-Sign-Language-Classification
 
 
 ## Requirements
